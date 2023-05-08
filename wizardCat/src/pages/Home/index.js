@@ -20,12 +20,7 @@ export default function Welcome() {
             </View>
 
             <Animatable.View delay={600} animation='fadeInUp' style={styles.containerForm}>
-                <Text style={styles.title}>Seja bem-vindo ao meu reino felino, humano, prepare-se para uma jornada mágica.</Text>
-                <Text style={styles.text}>Faça o login para começar</Text>
-
-                <TouchableOpacity style={styles.button} onPress={ () => navigation.navigate('Login')}>
-                    <Text style={styles.buttonText}>Acessar</Text>
-                </TouchableOpacity>
+                <Text style={styles.title}>Em manutenção</Text>
             </Animatable.View>
 
 
