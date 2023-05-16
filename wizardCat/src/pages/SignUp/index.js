@@ -1,68 +1,75 @@
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import * as Animatable from 'react-native-animatable'
-import { yupRevolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-
-const schema = yup.object({
-    nome: yup.string().required("Informe seu nome"),
-    email: yup.string().email("Email Inválido").required("Informe seu email"),
-    senha: yup.string().min(6, "A senha deve ter pelo menos 6 dígitos").required("Informe sua senha")
-})
-
+import axios from "axios";
+import { set } from "react-hook-form";
 
 export default function SignUp() {
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupRevolver(schema)
-    });
+    const navigation = useNavigation();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    function handleSignIn(data) {
-        console.log(data)
-    }
+    const handleSignUp = async () => {
+        try {
+
+            if (!name || !email || !password) {
+                setError('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            const response = await axios.post(
+                'https://x8ki-letl-twmt.n7.xano.io/api:vMvD84_H/auth/signup',
+                {
+                    name,
+                    email,
+                    password
+                }
+            );
+            console.log(response.data);
+
+            navigation.navigate('Home');
+
+            setName('')
+            setEmail('')
+            setPassword('')
+
+        } catch (error) {
+            console.error(error);
+            setError('Ocorreu um erro durante o cadastro.');
+        }
+    };
 
     return (
         <View style={styles.container}>
 
             <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
-                <Text style={styles.message}>Seja Bem vindo(a)</Text>
+                <Text style={styles.message}>Cadastro</Text>
             </Animatable.View>
 
             <Animatable.View animation='fadeInUp' style={styles.containerForm}>
-
+                {error ? <Text style={styles.error}>{error}</Text> : null}
                 <Text style={styles.title}>Nome</Text>
-                <Controller
-                    control={control}
-                    name="nome"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput onChangeText={onChange} onBlur={onBlur} placeholder="Digite um nome..." value={value} style={styles.input} />
-                    )}
-                />
-                {errors.nome && <Text style={styles.labelError}>{errors.nome?.message}</Text>}
+                <TextInput placeholder="Digite um nome..." style={styles.input} onChangeText={text => setName(text)} />
+
 
                 <Text style={styles.title}>Email</Text>
-                <Controller
-                    control={control}
-                    name="email"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput onChangeText={onChange} onBlur={onBlur} placeholder="Digite um email..." value={value} style={styles.input} />
-                    )}
-                />
-                {errors.email && <Text style={styles.labelError}>{errors.email?.message}</Text>}
+                <TextInput placeholder="Digite um email..." style={styles.input} onChangeText={text => setEmail(text)} />
 
                 <Text style={styles.title}>Senha</Text>
-                <Controller
-                    control={control}
-                    name="senha"
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput onChangeText={onChange} onBlur={onBlur} placeholder="Digite uma senha..." value={value} style={styles.input} secureTextEntry={true} />
-                    )}
-                />
-                {errors.senha && <Text style={styles.labelError}>{errors.senha?.message}</Text>}
+                <TextInput placeholder="Digite um senha..." style={styles.input} secureTextEntry onChangeText={text => setPassword(text)} />
 
-                <TouchableOpacity style={styles.button} onPress={handleSubmit(handleSignIn)}>
+
+
+                <TouchableOpacity style={styles.button} onPress={handleSignUp}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.buttonRegister}>
+                    <Text style={styles.registerText} onPress={() => navigation.navigate('Login')}>Voltar</Text>
                 </TouchableOpacity>
 
             </Animatable.View>
@@ -78,12 +85,12 @@ const styles = StyleSheet.create({
     containerHeader: {
         marginTop: '14%',
         marginBottom: '8%',
-        paddingStart: '5%',
     },
     message: {
         fontSize: 28,
         fontWeight: 'bold',
-        color: '#FFF'
+        color: '#FFF',
+        alignSelf: 'center'
     },
     containerForm: {
         backgroundColor: '#FFF',
@@ -125,5 +132,11 @@ const styles = StyleSheet.create({
     },
     registerText: {
         color: '#8B008B'
+    },
+    error: {
+        color: 'red',
+        marginBottom: 12,
+        marginTop: 12,
+        alignSelf: 'center'
     }
 })
