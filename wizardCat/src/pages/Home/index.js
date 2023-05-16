@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import * as Animatable from 'react-native-animatable'
 import { useNavigation } from "@react-navigation/native";
 
-export default function Welcome() {
+export default function Home() {
     
     const navigation = useNavigation();
     
@@ -13,8 +13,7 @@ export default function Welcome() {
         <View style={styles.container}>
             <View style={styles.containerLogo}>
                 <Animatable.Image
-                    animation='flipInY'
-                    source={require('../../assets/logo.png')}
+                    source={require('../../assets/manutencao.gif')}
                     style={{ width: 300, height: 300 }}
                 />
             </View>
@@ -22,8 +21,6 @@ export default function Welcome() {
             <Animatable.View delay={600} animation='fadeInUp' style={styles.containerForm}>
                 <Text style={styles.title}>Em manutenção</Text>
             </Animatable.View>
-
-
         </View>
     );
 }
@@ -31,17 +28,17 @@ export default function Welcome() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000'
+        backgroundColor: '#FFF'
     },
     containerLogo: {
         flex: 2,
-        backgroundColor: '#000',
+        backgroundColor: '#FFF',
         justifyContent: 'center',
         alignItems: 'center',
     },
     containerForm: {
         flex: 1,
-        backgroundColor: '#FFF',
+        backgroundColor: '#000',
         borderTopRightRadius: 25,
         borderTopLeftRadius: 25,
         paddingStart: '5%',
@@ -52,7 +49,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 28,
         marginBottom: 12,
-        color: '#8B008B'
+        color: '#FFF',
+        alignSelf: 'center'
     },
     text: {
         color: '#8A2BE2'

@@ -1,33 +1,70 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import * as Animatable from 'react-native-animatable'
+import axios from "axios";
 
 export default function Login() {
 
     const navigation = useNavigation();
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleLogin = async () => {
+        try {
+            if (!email || !password) {
+                setError('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            const response = await axios.post(
+                'https://x8ki-letl-twmt.n7.xano.io/api:vMvD84_H/auth/login',
+                {
+                    email,
+                    password
+                }
+            );
+            console.log(response.data);
+
+            navigation.navigate('Home');
+
+            setEmail('');
+            setPassword('');
+            setError('');
+
+
+        } catch (error) {
+            console.error(error);
+            setError('Credenciais inválidas. Por favor, tente novamente.');
+        }
+    };
+
+
     return (
         <View style={styles.container}>
-            
+
             <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
-                <Text style={styles.message}>Bem vindo(a)</Text>
+                <Text style={styles.message}>Login</Text>
             </Animatable.View>
-            
+
             <Animatable.View animation='fadeInUp' style={styles.containerForm}>
                 
-                <Text style={styles.title}>Email</Text>
-                <TextInput placeholder="Digite um email..." style={styles.input}/>
+                {error ? <Text style={styles.error}>{error}</Text> : null}
                 
-                <Text style={styles.title}>Senha</Text>
-                <TextInput placeholder="Sua senha" style={styles.input}/>
+                <Text style={styles.title}>Email</Text>
+                <TextInput placeholder="Digite seu email..." style={styles.input} onChangeText={(text) => setEmail(text)} />
 
-                <TouchableOpacity style={styles.button}>
+                <Text style={styles.title}>Senha</Text>
+                <TextInput placeholder="Digite sua senha..." secureTextEntry style={styles.input} onChangeText={(text) => setPassword(text)} />
+
+                <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Acessar</Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity style={styles.buttonRegister}>
-                    <Text style={styles.registerText} onPress={ () => navigation.navigate('SignUp')}>Não possui uma conta? Cadastre-se</Text>
+                    <Text style={styles.registerText} onPress={() => navigation.navigate('SignUp')}>Não possui uma conta? Cadastre-se</Text>
                 </TouchableOpacity>
 
             </Animatable.View>
@@ -36,21 +73,21 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex: 1,
         backgroundColor: '#000'
     },
-    containerHeader:{
+    containerHeader: {
         marginTop: '14%',
         marginBottom: '8%',
-        paddingStart: '5%',
     },
-    message:{
+    message: {
         fontSize: 28,
         fontWeight: 'bold',
-        color: '#FFF'
+        color: '#FFF',
+        alignSelf: 'center'
     },
-    containerForm:{
+    containerForm: {
         backgroundColor: '#FFF',
         flex: 1,
         borderTopRightRadius: 25,
@@ -58,19 +95,19 @@ const styles = StyleSheet.create({
         paddingStart: '5%',
         paddingEnd: '5%'
     },
-    title:{
+    title: {
         fontSize: 20,
         marginTop: 28,
-        color: '#8A2BE2' 
+        color: '#8A2BE2'
     },
-    input:{
+    input: {
         borderBottomWidth: 1,
         height: 40,
         marginBottom: 12,
         fontSize: 16,
         color: '#8B008B'
     },
-    button:{
+    button: {
         backgroundColor: '#8A2BE2',
         width: '100%',
         borderRadius: 4,
@@ -79,16 +116,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    buttonText:{
+    buttonText: {
         color: '#FFF',
         fontSize: 18,
         fontWeight: 'bold'
     },
-    buttonRegister:{
+    buttonRegister: {
         marginTop: 14,
         alignSelf: 'center'
     },
-    registerText:{
+    registerText: {
         color: '#8B008B'
+    },
+    error: {
+        color: 'red',
+        marginBottom: 12,
+        marginTop: 12,
+        alignSelf: 'center'
     }
 })

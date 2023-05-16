@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Welcome from '../pages/Welcome'
 import SignUp from '../pages/SignUp'
 import Login from '../pages/Login';
+import Home from '../pages/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +28,12 @@ export default function Routes() {
                 options={{ headerShown: false }}
             />
 
-    
+            <Stack.Screen
+            name='Home'
+            component={Home}
+            options={{ headerShown: false }}
+            />
+            
         </Stack.Navigator>
     );
 }
